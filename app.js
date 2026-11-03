@@ -98,8 +98,7 @@ $("#generatePlan").onclick=generatePlan;
 function assistantReply(message){const q=message.toLowerCase(),pending=db.tasks.filter(t=>!t.done),subjects=db.subjects,exams=db.exams.filter(e=>e.date>=todayKey()).sort((a,b)=>a.date.localeCompare(b.date));
  if(/plan|organiza|reorganiz|calendario|agenda/.test(q)){const r=buildStudyPlan(14,Number($("#planDuration").value||db.prefs.duration||45));$("#plannerStatus").textContent=r.message;save();renderGeneratedPlan();return r.created.length?`Listo: he creado ${r.created.length} sesiones para los próximos 14 días. Las he guardado en tus tareas. ${r.message}`:r.message}
  if(/hoy|ahora|deber[ií]a estudiar|qu[eé] estudio/.test(q)){const today=pending.filter(t=>t.date===todayKey());if(today.length)return `Para hoy tienes ${today.length} tarea(s):
-${today.map(t=>`• ${t.title} (${subjectName(t.subjectId)})`).join("
-")}
+$today.map(t=>`• ${t.title} (${subjectName(t.subjectId)})`).join("\n")
 
 Empieza por la que tenga prioridad alta. Si no encaja con tu tiempo disponible, puedo reorganizar el plan.`;const next=pending.slice().sort((a,b)=>(a.date||"9999").localeCompare(b.date||"9999"))[0];return next?`No tienes tareas previstas para hoy. La siguiente pendiente es «${next.title}»${next.date?` (${dateFmt(next.date)})`:""}. También puedes generar un plan para reservarle un hueco.`:"No tienes tareas pendientes. Añade temas o tareas y podré ayudarte a distribuirlos."}
  if(/progreso|avance|complet/.test(q)){const total=subjects.reduce((n,s)=>n+s.topics.length,0),done=subjects.reduce((n,s)=>n+s.topics.filter(t=>t.done).length,0),pct=total?Math.round(done/total*100):0;return `Tu progreso actual es ${done} de ${total} temas completados (${pct}%).
