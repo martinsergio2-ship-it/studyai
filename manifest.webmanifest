@@ -1,11 +1,11 @@
 {
-  "name": "StudyAI — Tu espacio de estudio",
+  "name": "StudyAI v4 — Horario y entregas",
   "short_name": "StudyAI",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#0b1020",
   "theme_color": "#111827",
-  "description": "Organiza tus estudios con StudyAI",
+  "description": "Planificador de estudio con exámenes, entregas, horarios y descansos",
   "icons": [
     {
       "src": "icon.svg",

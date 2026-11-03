@@ -1,0 +1,8 @@
+{
+  "name": "studyai-v4-horario-google",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs"
+  }
+}
