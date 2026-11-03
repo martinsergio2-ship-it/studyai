@@ -1,29 +1,38 @@
-# StudyAI v3 — Firebase + planificador gratuito
+# StudyAI — primera versión
 
 Aplicación web adaptable a móvil y ordenador. Incluye:
 - Panel de inicio y estadísticas.
-- Asignaturas, temas y seguimiento de progreso.
+- Asignaturas y temas con seguimiento.
 - Registro de exámenes y tareas.
 - Horario semanal y preferencias de estudio.
-- Chat académico local basado en tus datos.
-- Generador y reorganizador de sesiones de estudio.
-- Firebase Authentication y Cloud Firestore para sincronizar tu cuenta entre dispositivos.
-- Modo claro/oscuro y PWA instalable.
+- Selector de modo claro/oscuro.
+- PWA instalable.
+- Guardado local en el navegador.
 
-## Qué hace el asistente gratuito
+## Probarla
+Abre `index.html` en un navegador moderno. Para probar la instalación PWA y el modo offline, publícala en GitHub Pages o utiliza un servidor local HTTPS/localhost.
 
-El chat analiza los datos que ya están guardados en tu cuenta: asignaturas, temas pendientes, exámenes, tareas y disponibilidad. Puede resumir el progreso, listar próximos exámenes, sugerir qué hacer hoy y generar/reorganizar sesiones. El planificador prioriza las materias con exámenes próximos y crea tareas con fecha y hora dentro de los bloques de disponibilidad configurados.
+## Importante sobre los datos
+Esta primera versión guarda los datos en el navegador del dispositivo (localStorage). No se sincronizan todavía entre iPhone y ordenador. La sincronización Firebase y la IA conectada son la siguiente fase. No introduzcas claves API en `app.js` ni en ningún archivo público.
 
-**Limitación importante:** esta versión no conecta con un modelo generativo como ChatGPT. Utiliza reglas locales deterministas; por tanto, no puede explicar cualquier materia con la flexibilidad de un modelo de lenguaje. No realiza llamadas de pago ni necesita una clave API.
+## Publicar en GitHub Pages
+1. Crea un repositorio nuevo llamado `studyai`.
+2. Sube todos los archivos de esta carpeta a la raíz del repositorio.
+3. En Settings → Pages, selecciona Deploy from a branch, `main` y `/ (root)`.
+4. Abre la URL que GitHub Pages te proporcione.
 
-## Configuración Firebase
+## Próxima fase
+- Firebase Authentication + Firestore para sincronización entre dispositivos.
+- Reglas de seguridad de Firestore para que cada usuario solo lea y escriba sus datos.
+- Backend seguro (por ejemplo, Cloud Functions) para conectar el modelo de IA sin exponer secretos.
+- IA con herramientas para crear, modificar y reprogramar tareas a partir del horario, los exámenes y los temarios.
 
-La aplicación está configurada para el proyecto Firebase `studyai-39d68` y usa Firebase JS SDK modular 13.2.0. En Firebase Console:
-1. Authentication → Proveedores de acceso → activa Correo electrónico/contraseña.
-2. Firestore Database → Reglas: permite a cada usuario acceder solo a `users/{uid}/...` cuando `request.auth.uid == uid`.
-3. Authentication → Settings → Authorized domains: incluye el host de GitHub Pages (por ejemplo, `tuusuario.github.io`).
 
-Reglas de referencia:
+## Firebase (versión 2)
+
+Esta versión usa Firebase Authentication (correo y contraseña) y Cloud Firestore. Cada cuenta guarda sus datos en `users/{uid}/appData/main`; las reglas de Firestore deben permitir el acceso solo cuando `request.auth.uid == userId`.
+
+En Firebase Console, activa Authentication → Proveedores de acceso → Correo electrónico/contraseña. En Firestore publica reglas equivalentes a:
 
 ```javascript
 rules_version = '2';
@@ -36,18 +45,9 @@ service cloud.firestore {
 }
 ```
 
-La configuración web de Firebase identifica el proyecto; la protección real de los datos depende de Authentication y las reglas de Firestore. No añadas claves privadas de servicios externos al JavaScript público.
+La primera cuenta que inicie sesión en un navegador puede importar los datos antiguos guardados en `studyai-data` de ese navegador si todavía no hay datos remotos para esa cuenta. Después, Firestore será la fuente compartida entre dispositivos.
 
-## Publicar la actualización
+La configuración web de Firebase incluida en `app.js` identifica el proyecto; la seguridad depende de Authentication y de las reglas de Firestore. No añadas claves privadas de servicios de IA al JavaScript público.
 
-1. Descomprime el ZIP.
-2. Abre la carpeta `StudyAI` y sube sus archivos directamente a la raíz del repositorio GitHub `studyai`, reemplazando los anteriores.
-3. Confirma los cambios (Commit changes) en la rama `main`.
-4. Espera a que GitHub Pages termine el despliegue.
-5. Abre la web y fuerza la recarga con `Ctrl + Shift + R`.
 
-El service worker usa la caché `studyai-v3-planner` para evitar servir los archivos antiguos.
-
-## Datos y privacidad
-
-Los datos académicos se guardan en Firestore en `users/{uid}/appData/main`. El chat local no envía el contenido de la cuenta a ningún proveedor de IA. No introduzcas contraseñas ni información personal sensible en los campos académicos.
+Si Firebase muestra `auth/unauthorized-domain`, abre Authentication → Settings → Authorized domains y añade el dominio de GitHub Pages de tu sitio (solo el host, por ejemplo `tuusuario.github.io`, sin `https://` ni rutas).
