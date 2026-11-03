@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#111827">
+  <meta name="description" content="StudyAI — tu organizador académico inteligente">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <title>StudyAI · Tu espacio de estudio</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0b1020;--panel:#121a2c;--panel2:#182238;--text:#edf2ff;--muted:#91a0bb;--line:#26334d;--accent:#8b7cff;--accent2:#5bd6c0;--danger:#ff7185;--shadow:0 18px 50px #0005}
+    [data-theme="light"]{color-scheme:light;--bg:#f3f5fb;--panel:#fff;--panel2:#f0f2fa;--text:#172039;--muted:#66718a;--line:#e2e6f0;--accent:#6657e8;--accent2:#168f7e;--danger:#d9435a;--shadow:0 18px 50px #25305a12}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    button,input,select,textarea{font:inherit}button{cursor:pointer}.app{min-height:100vh;display:grid;grid-template-columns:250px 1fr}
+    aside{background:var(--panel);border-right:1px solid var(--line);padding:25px 16px;display:flex;flex-direction:column;gap:25px}
+    .brand{display:flex;align-items:center;gap:11px;padding:0 9px}.logo{width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,var(--accent),#51cfc1);display:grid;place-items:center;color:white;font-weight:900;font-size:18px}.brand b{font-size:19px;letter-spacing:-.5px}.brand small{display:block;color:var(--muted);font-size:11px}
+    nav{display:grid;gap:6px}.navbtn{border:0;background:transparent;color:var(--muted);padding:11px 13px;border-radius:12px;text-align:left;display:flex;gap:12px;align-items:center}.navbtn.active,.navbtn:hover{background:var(--panel2);color:var(--text)}.navbtn.active{box-shadow:inset 3px 0 var(--accent)}.navbtn span:first-child{width:20px;text-align:center}
+    .sidebottom{margin-top:auto;display:grid;gap:10px}.profile{border-top:1px solid var(--line);padding:17px 8px 0;display:flex;gap:10px;align-items:center}.avatar{width:34px;height:34px;border-radius:50%;background:var(--panel2);display:grid;place-items:center}.profile small{color:var(--muted);display:block}
+    main{padding:30px clamp(18px,4vw,54px) 60px;max-width:1500px;width:100%;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:28px}.eyebrow{color:var(--accent2);font-size:12px;font-weight:750;text-transform:uppercase;letter-spacing:1.2px}h1{font-size:clamp(25px,3vw,34px);line-height:1.15;margin:5px 0 0;letter-spacing:-1px}.sub{color:var(--muted);margin:7px 0 0}.actions{display:flex;gap:9px;align-items:center}
+    .btn{border:1px solid var(--line);background:var(--panel);color:var(--text);padding:10px 14px;border-radius:11px;font-weight:650}.btn.primary{background:var(--accent);border-color:var(--accent);color:white}.btn:hover{filter:brightness(1.08)}.iconbtn{width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--text);font-size:17px}
+    .grid{display:grid;gap:16px}.stats{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:18px}.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:19px;box-shadow:var(--shadow)}.statlabel{color:var(--muted);font-size:13px}.statnum{font-size:29px;font-weight:800;letter-spacing:-1px;margin-top:7px}.statfoot{font-size:12px;color:var(--muted);margin-top:3px}.layout2{grid-template-columns:1.35fr 1fr}.sectionhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.sectionhead h2{font-size:17px;margin:0}.muted{color:var(--muted)}.list{display:grid;gap:10px}.item{padding:12px 13px;background:var(--panel2);border:1px solid var(--line);border-radius:13px;display:flex;justify-content:space-between;gap:12px;align-items:center}.item strong{font-size:14px}.item small{display:block;color:var(--muted);margin-top:3px}.tag{font-size:11px;padding:4px 8px;border-radius:30px;background:#8b7cff20;color:var(--accent);white-space:nowrap}.empty{padding:25px 14px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}.progress{height:7px;border-radius:20px;background:var(--line);overflow:hidden;margin-top:10px}.progress i{height:100%;display:block;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:20px}
+    .page{display:none}.page.active{display:block}.cards3{grid-template-columns:repeat(3,minmax(0,1fr))}.field{display:grid;gap:6px;margin-bottom:12px}.field label{font-size:12px;color:var(--muted);font-weight:700}.field input,.field select,.field textarea,.chatinput{width:100%;border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:11px 12px;border-radius:10px;outline:none}.field textarea{min-height:90px;resize:vertical}.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--accent)}
+    .toolbar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:16px}.toolbar input{flex:1;min-width:180px}.schedule{display:grid;grid-template-columns:repeat(7,minmax(110px,1fr));gap:9px;overflow:auto}.day{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;min-height:170px}.day b{font-size:12px}.slot{margin-top:9px;padding:9px;border-radius:9px;background:var(--panel2);font-size:12px}.slot strong{display:block}.chatbox{display:flex;flex-direction:column;height:min(65vh,650px);min-height:420px}.messages{flex:1;overflow:auto;display:flex;flex-direction:column;gap:12px;padding:6px 2px 18px}.bubble{max-width:85%;padding:13px 15px;border-radius:15px;background:var(--panel2);white-space:pre-wrap}.bubble.user{align-self:flex-end;background:var(--accent);color:white}.bubble.ai{align-self:flex-start}.chatrow{display:flex;gap:9px}.chatrow input{flex:1}.hint{font-size:12px;color:var(--muted);margin-top:10px}.notice{padding:13px 15px;border-radius:12px;background:#8b7cff15;border:1px solid #8b7cff40;color:var(--text);font-size:13px;margin-bottom:16px}
+    dialog{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:18px;padding:22px;width:min(480px,calc(100% - 28px));box-shadow:var(--shadow)}dialog::backdrop{background:#030611aa}.modalhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}.modalhead h2{margin:0;font-size:19px}.close{border:0;background:transparent;color:var(--muted);font-size:22px}
+    .mobilebar{display:none}
+    @media(max-width:900px){.app{grid-template-columns:1fr}aside{display:none}main{padding:23px 16px 95px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.layout2{grid-template-columns:1fr}.cards3{grid-template-columns:repeat(2,minmax(0,1fr))}.mobilebar{position:fixed;z-index:5;bottom:0;left:0;right:0;display:flex;justify-content:space-around;background:var(--panel);border-top:1px solid var(--line);padding:8px 3px calc(8px + env(safe-area-inset-bottom))}.mobilebar button{background:transparent;border:0;color:var(--muted);font-size:10px;display:grid;gap:3px;justify-items:center}.mobilebar button.active{color:var(--accent)}.mobilebar span{font-size:18px}.top{align-items:flex-start}.actions .btn{display:none}}
+    @media(max-width:520px){.cards3{grid-template-columns:1fr}.statnum{font-size:25px}.card{padding:15px}.schedule{grid-template-columns:repeat(7,125px)}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside>
+    <div class="brand"><div class="logo">S</div><div><b>StudyAI</b><small>Tu espacio de estudio</small></div></div>
+    <nav id="sidenav">
+      <button class="navbtn active" data-page="home"><span>⌂</span>Inicio</button>
+      <button class="navbtn" data-page="schedule"><span>▦</span>Mi horario</button>
+      <button class="navbtn" data-page="subjects"><span>▤</span>Asignaturas</button>
+      <button class="navbtn" data-page="exams"><span>◷</span>Exámenes</button>
+      <button class="navbtn" data-page="tasks"><span>✓</span>Tareas</button>
+      <button class="navbtn" data-page="assistant"><span>✧</span>Asistente IA</button>
+    </nav>
+    <div class="sidebottom"><button class="navbtn" id="themeSide"><span>◐</span>Cambiar apariencia</button><div class="profile"><div class="avatar">👤</div><div><b>Mi espacio</b><small>Plan académico personal</small></div></div></div>
+  </aside>
+  <main>
+    <div class="top"><div><div class="eyebrow" id="todayLabel">TU ORGANIZACIÓN ACADÉMICA</div><h1 id="pageTitle">Buenos días</h1><p class="sub" id="pageSub">Todo lo que necesitas para avanzar, en un solo lugar.</p></div><div class="actions"><button class="btn" id="themeTop">◐ Apariencia</button><button class="btn primary" id="quickAdd">＋ Añadir</button></div></div>
+
+    <section class="page active" id="page-home">
+      <div class="grid stats">
+        <div class="card"><div class="statlabel">Asignaturas</div><div class="statnum" id="statSubjects">0</div><div class="statfoot">En tu espacio académico</div></div>
+        <div class="card"><div class="statlabel">Exámenes próximos</div><div class="statnum" id="statExams">0</div><div class="statfoot">Pendientes de realizar</div></div>
+        <div class="card"><div class="statlabel">Tareas pendientes</div><div class="statnum" id="statTasks">0</div><div class="statfoot">Por completar</div></div>
+        <div class="card"><div class="statlabel">Temas completados</div><div class="statnum" id="statTopics">0%</div><div class="statfoot">Progreso de tus temarios</div></div>
+      </div>
+      <div class="grid layout2">
+        <div class="card"><div class="sectionhead"><h2>Plan para hoy</h2><button class="btn" data-go="tasks">Ver tareas</button></div><div id="todayTasks" class="list"></div></div>
+        <div class="card"><div class="sectionhead"><h2>Próximos exámenes</h2><button class="btn" data-go="exams">Ver todos</button></div><div id="upcomingExams" class="list"></div></div>
+        <div class="card"><div class="sectionhead"><h2>Progreso por asignatura</h2><button class="btn" data-go="subjects">Ver asignaturas</button></div><div id="subjectProgress" class="list"></div></div>
+        <div class="card"><div class="sectionhead"><h2>Empieza por aquí</h2></div><p class="muted">Añade tus asignaturas, registra las fechas de examen y configura tus horas disponibles. Después podrás pedirle a la IA que prepare un plan de estudio con toda esa información.</p><button class="btn primary" data-go="assistant">Hablar con StudyAI ✧</button></div>
+      </div>
+    </section>
+
+    <section class="page" id="page-schedule">
+      <div class="notice">Configura cuándo tienes clase y cuándo puedes estudiar. La planificación automática utilizará estos bloques para no asignarte sesiones imposibles.</div>
+      <div class="card"><div class="sectionhead"><h2>Disponibilidad semanal</h2><button class="btn primary" id="addSlot">＋ Añadir bloque</button></div><div class="schedule" id="scheduleGrid"></div></div>
+      <div class="card" style="margin-top:16px"><div class="sectionhead"><h2>Preferencias de estudio</h2></div><div class="grid cards3"><div class="field"><label>Hora habitual de inicio</label><input type="time" id="prefStart" value="17:00"></div><div class="field"><label>Hora límite para terminar</label><input type="time" id="prefEnd" value="20:30"></div><div class="field"><label>Duración preferida de sesión</label><select id="prefDuration"><option value="25">25 minutos</option><option value="45" selected>45 minutos</option><option value="60">60 minutos</option><option value="90">90 minutos</option></select></div></div><button class="btn primary" id="savePrefs">Guardar preferencias</button></div>
+    </section>
+
+    <section class="page" id="page-subjects">
+      <div class="toolbar"><input class="chatinput" id="subjectSearch" placeholder="Buscar asignatura..."><button class="btn primary" id="addSubject">＋ Nueva asignatura</button></div><div class="grid cards3" id="subjectCards"></div>
+    </section>
+
+    <section class="page" id="page-exams">
+      <div class="toolbar"><input class="chatinput" id="examSearch" placeholder="Buscar examen..."><button class="btn primary" id="addExam">＋ Añadir examen</button></div><div class="list" id="examList"></div>
+    </section>
+
+    <section class="page" id="page-tasks">
+      <div class="toolbar"><input class="chatinput" id="taskSearch" placeholder="Buscar tarea..."><select class="chatinput" id="taskFilter" style="max-width:170px"><option value="all">Todas las tareas</option><option value="pending">Pendientes</option><option value="done">Completadas</option></select><button class="btn primary" id="addTask">＋ Nueva tarea</button></div><div class="list" id="taskList"></div>
+    </section>
+
+    <section class="page" id="page-assistant">
+      <div class="notice">StudyAI utilizará tus asignaturas, temarios, exámenes, disponibilidad y tareas para preparar recomendaciones coherentes. La conexión con el modelo de IA se activa en la fase de configuración del servidor.</div>
+      <div class="card chatbox"><div class="messages" id="messages"><div class="bubble ai">¡Hola! Soy tu asistente académico. Cuando hayas añadido tus asignaturas, horarios y exámenes, podré ayudarte a preparar una planificación. De momento puedes contarme qué necesitas organizar.</div></div><form class="chatrow" id="chatForm"><input class="chatinput" id="chatInput" placeholder="Ej.: Organízame el estudio para mis próximos exámenes..." autocomplete="off"><button class="btn primary">Enviar</button></form></div>
+      <p class="hint">En esta primera versión, el chat muestra la estructura y el contexto académico. La respuesta inteligente real se conectará mediante una función segura de servidor; no introduzcas contraseñas ni datos personales sensibles.</p>
+    </section>
+  </main>
+</div>
+<div class="mobilebar" id="mobilebar">
+  <button class="active" data-page="home"><span>⌂</span>Inicio</button><button data-page="schedule"><span>▦</span>Horario</button><button data-page="subjects"><span>▤</span>Temario</button><button data-page="exams"><span>◷</span>Exámenes</button><button data-page="assistant"><span>✧</span>IA</button>
+</div>
+
+<dialog id="modal"><div class="modalhead"><h2 id="modalTitle">Añadir</h2><button class="close" id="closeModal">×</button></div><form id="modalForm"></form></dialog>
+<script type="module" src="app.js"></script>
+</body></html>
