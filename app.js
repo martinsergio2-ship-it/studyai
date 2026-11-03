@@ -103,11 +103,9 @@ $today.map(t=>`• ${t.title} (${subjectName(t.subjectId)})`).join("\n")
 Empieza por la que tenga prioridad alta. Si no encaja con tu tiempo disponible, puedo reorganizar el plan.`;const next=pending.slice().sort((a,b)=>(a.date||"9999").localeCompare(b.date||"9999"))[0];return next?`No tienes tareas previstas para hoy. La siguiente pendiente es «${next.title}»${next.date?` (${dateFmt(next.date)})`:""}. También puedes generar un plan para reservarle un hueco.`:"No tienes tareas pendientes. Añade temas o tareas y podré ayudarte a distribuirlos."}
  if(/progreso|avance|complet/.test(q)){const total=subjects.reduce((n,s)=>n+s.topics.length,0),done=subjects.reduce((n,s)=>n+s.topics.filter(t=>t.done).length,0),pct=total?Math.round(done/total*100):0;return `Tu progreso actual es ${done} de ${total} temas completados (${pct}%).
 Tienes ${pending.length} tarea(s) pendiente(s) y ${exams.length} examen(es) próximo(s).
-${subjects.length?subjects.map(s=>{const d=s.topics.filter(t=>t.done).length;return `• ${s.name}: ${d}/${s.topics.length} temas`}).join("
-"):"Todavía no has creado asignaturas."}`}
+${subjects.length?subjects.map(s=>{const d=s.topics.filter(t=>t.done).length;return `• ${s.name}: ${d}/${s.topics.length} temas`})..join("\n"):"Todavía no has creado asignaturas."}`}
  if(/examen|prueba|control/.test(q)){return exams.length?`Estos son tus próximos exámenes:
-${exams.slice(0,8).map(e=>`• ${e.name} — ${subjectName(e.subjectId)} — ${dateFmt(e.date)} — prioridad ${e.priority||"Media"}`).join("
-")}`:"No tienes exámenes próximos registrados. Añade sus fechas en la sección Exámenes para que pueda priorizarlos."}
+${exams.slice(0,8).map(e=>`• ${e.name} — ${subjectName(e.subjectId)} — ${dateFmt(e.date)} — prioridad ${e.priority||"Media"}`)..join("\n")}`:"No tienes exámenes próximos registrados. Añade sus fechas en la sección Exámenes para que pueda priorizarlos."}
  if(/asignatura|temario|tema|materia/.test(q)){return subjects.length?`Tienes ${subjects.length} asignatura(s):
 ${subjects.map(s=>{const pendingTopics=s.topics.filter(t=>!t.done);return `• ${s.name}: ${s.topics.length} temas (${pendingTopics.length} pendientes)${pendingTopics.length?" — "+pendingTopics.slice(0,5).map(t=>t.name).join(", "):""}`}).join("
 ")}`:"Aún no tienes asignaturas. Añade una materia y sus temas en la sección Asignaturas."}
