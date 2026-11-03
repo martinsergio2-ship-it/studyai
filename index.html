@@ -26,9 +26,34 @@
     .mobilebar{display:none}
     @media(max-width:900px){.app{grid-template-columns:1fr}aside{display:none}main{padding:23px 16px 95px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.layout2{grid-template-columns:1fr}.cards3{grid-template-columns:repeat(2,minmax(0,1fr))}.mobilebar{position:fixed;z-index:5;bottom:0;left:0;right:0;display:flex;justify-content:space-around;background:var(--panel);border-top:1px solid var(--line);padding:8px 3px calc(8px + env(safe-area-inset-bottom))}.mobilebar button{background:transparent;border:0;color:var(--muted);font-size:10px;display:grid;gap:3px;justify-items:center}.mobilebar button.active{color:var(--accent)}.mobilebar span{font-size:18px}.top{align-items:flex-start}.actions .btn{display:none}}
     @media(max-width:520px){.cards3{grid-template-columns:1fr}.statnum{font-size:25px}.card{padding:15px}.schedule{grid-template-columns:repeat(7,125px)}}
+
+    body.auth-required .app,body.auth-required .mobilebar{display:none!important}
+    .authgate{min-height:100vh;display:grid;place-items:center;padding:24px;background:var(--bg)}
+    .authcard{width:min(440px,100%);background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:28px;box-shadow:var(--shadow)}
+    .authbrand{display:flex;align-items:center;gap:12px;margin-bottom:22px}.authbrand .logo{width:42px;height:42px;border-radius:13px;background:var(--accent);color:white;display:grid;place-items:center;font-weight:800;font-size:22px}
+    .authcard h1{font-size:25px;margin:0 0 7px}.authcard p{color:var(--muted);font-size:14px;line-height:1.5;margin:0 0 20px}
+    .authcard .field{margin:14px 0}.authcard .field label{display:block;font-size:13px;margin-bottom:7px;color:var(--muted)}
+    .authcard input{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--text);font:inherit;box-sizing:border-box}
+    .authswitch{display:flex;gap:8px;margin-bottom:18px}.authswitch button{flex:1}.autherror{color:#dc6464;font-size:13px;min-height:18px;margin-top:10px}.accountbar{display:flex;align-items:center;gap:9px}.accountbar small{color:var(--muted);max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    @media(max-width:520px){.authcard{padding:22px}.accountbar small{display:none}.accountbar .btn{display:inline-flex}}
+
   </style>
 </head>
-<body>
+<body class="auth-required">
+<div class="authgate" id="authGate">
+  <div class="authcard">
+    <div class="authbrand"><div class="logo">S</div><div><strong>StudyAI</strong><div class="muted" style="font-size:12px">Tu espacio de estudio</div></div></div>
+    <h1 id="authTitle">Entra en tu cuenta</h1>
+    <p>Inicia sesión para acceder a tus asignaturas, horarios, tareas y exámenes desde cualquiera de tus dispositivos.</p>
+    <div class="authswitch"><button class="btn primary" id="showLogin" type="button">Iniciar sesión</button><button class="btn" id="showRegister" type="button">Crear cuenta</button></div>
+    <form id="authForm">
+      <div class="field"><label for="authEmail">Correo electrónico</label><input id="authEmail" type="email" autocomplete="email" required placeholder="tu@correo.com"></div>
+      <div class="field"><label for="authPassword">Contraseña</label><input id="authPassword" type="password" autocomplete="current-password" minlength="6" required placeholder="Mínimo 6 caracteres"></div>
+      <button class="btn primary" id="authSubmit" type="submit" style="width:100%">Iniciar sesión</button>
+      <div class="autherror" id="authError" role="alert"></div>
+    </form>
+  </div>
+</div>
 <div class="app">
   <aside>
     <div class="brand"><div class="logo">S</div><div><b>StudyAI</b><small>Tu espacio de estudio</small></div></div>
@@ -43,7 +68,7 @@
     <div class="sidebottom"><button class="navbtn" id="themeSide"><span>◐</span>Cambiar apariencia</button><div class="profile"><div class="avatar">👤</div><div><b>Mi espacio</b><small>Plan académico personal</small></div></div></div>
   </aside>
   <main>
-    <div class="top"><div><div class="eyebrow" id="todayLabel">TU ORGANIZACIÓN ACADÉMICA</div><h1 id="pageTitle">Buenos días</h1><p class="sub" id="pageSub">Todo lo que necesitas para avanzar, en un solo lugar.</p></div><div class="actions"><button class="btn" id="themeTop">◐ Apariencia</button><button class="btn primary" id="quickAdd">＋ Añadir</button></div></div>
+    <div class="top"><div><div class="eyebrow" id="todayLabel">TU ORGANIZACIÓN ACADÉMICA</div><h1 id="pageTitle">Buenos días</h1><p class="sub" id="pageSub">Todo lo que necesitas para avanzar, en un solo lugar.</p></div><div class="actions"><div class="accountbar"><small id="accountEmail"></small><button class="btn" id="signOut">Salir</button></div><button class="btn" id="themeTop">◐ Apariencia</button><button class="btn primary" id="quickAdd">＋ Añadir</button></div></div>
 
     <section class="page active" id="page-home">
       <div class="grid stats">

@@ -1,10 +1,34 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
+
+const firebaseConfig={
+  apiKey:"AIzaSyC6KAKoqMsgmasps1FX_Ogo3S6jZMPZqWo",
+  authDomain:"studyai-39d68.firebaseapp.com",
+  projectId:"studyai-39d68",
+  storageBucket:"studyai-39d68.firebasestorage.app",
+  messagingSenderId:"526069251527",
+  appId:"1:526069251527:web:8603187e89f640d1912de2",
+  measurementId:"G-0GB3SEYJT6"
+};
+const firebaseApp=initializeApp(firebaseConfig);
+const auth=getAuth(firebaseApp);
+const firestore=getFirestore(firebaseApp);
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const days=["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"];
 const todayKey=()=>new Date().toISOString().slice(0,10);
 const blank={subjects:[],exams:[],tasks:[],slots:[],prefs:{start:"17:00",end:"20:30",duration:"45"}};
-let db=JSON.parse(localStorage.getItem("studyai-data")||"null")||blank;
-let activePage="home";
-const save=()=>{localStorage.setItem("studyai-data",JSON.stringify(db));render()};
+let db={...blank,subjects:[],exams:[],tasks:[],slots:[],prefs:{...blank.prefs}};
+let activePage="home",currentUser=null,dataReady=false,saveTimer=null,authMode="login",unsubscribeData=null;
+const userDataRef=user=>doc(firestore,"users",user.uid,"appData","main");
+const showAuthError=message=>{$("#authError").textContent=message||""};
+function setAuthMode(mode){authMode=mode;const register=mode==="register";$("#authTitle").textContent=register?"Crea tu cuenta":"Entra en tu cuenta";$("#authSubmit").textContent=register?"Crear cuenta":"Iniciar sesión";$("#showLogin").classList.toggle("primary",!register);$("#showRegister").classList.toggle("primary",register);$("#authPassword").autocomplete=register?"new-password":"current-password";showAuthError("")}
+$("#showLogin").onclick=()=>setAuthMode("login");$("#showRegister").onclick=()=>setAuthMode("register");
+$("#authForm").onsubmit=async e=>{e.preventDefault();const email=$("#authEmail").value.trim(),password=$("#authPassword").value;const submit=$("#authSubmit");submit.disabled=true;showAuthError("");try{if(authMode==="register")await createUserWithEmailAndPassword(auth,email,password);else await signInWithEmailAndPassword(auth,email,password)}catch(error){const messages={"auth/email-already-in-use":"Ese correo ya tiene una cuenta. Inicia sesión.","auth/invalid-email":"El correo electrónico no es válido.","auth/weak-password":"La contraseña debe tener al menos 6 caracteres.","auth/invalid-credential":"Correo o contraseña incorrectos.","auth/too-many-requests":"Demasiados intentos. Espera un poco y vuelve a intentarlo."};showAuthError(messages[error.code]||"No se pudo acceder. Comprueba la conexión y vuelve a intentarlo.")}finally{submit.disabled=false}};
+$("#signOut").onclick=()=>signOut(auth);
+async function loadUserData(user){dataReady=false;if(unsubscribeData){unsubscribeData();unsubscribeData=null}const localKey=`studyai-data-${user.uid}`;const snapshot=await getDoc(userDataRef(user));if(snapshot.exists()){const remote=snapshot.data().data||{};db={...blank,...remote,prefs:{...blank.prefs,...(remote.prefs||{})}}}else{let local=null,usedLegacy=false;try{local=JSON.parse(localStorage.getItem(localKey)||"null");if(!local){local=JSON.parse(localStorage.getItem("studyai-data")||"null");usedLegacy=!!local}}catch{}db=local?{...blank,...local,prefs:{...blank.prefs,...(local.prefs||{})}}:{...blank,subjects:[],exams:[],tasks:[],slots:[],prefs:{...blank.prefs}};await setDoc(userDataRef(user),{data:db,updatedAt:serverTimestamp()});if(usedLegacy)localStorage.removeItem("studyai-data")}localStorage.setItem(localKey,JSON.stringify(db));dataReady=true;render();unsubscribeData=onSnapshot(userDataRef(user),snap=>{if(!snap.exists()||!dataReady)return;const remote=snap.data().data||{};const incoming=JSON.stringify(remote),current=JSON.stringify(db);if(incoming!==current){db={...blank,...remote,prefs:{...blank.prefs,...(remote.prefs||{})}};localStorage.setItem(localKey,JSON.stringify(db));render()}},error=>console.error("Error escuchando cambios de Firestore",error))}
+onAuthStateChanged(auth,async user=>{if(unsubscribeData){unsubscribeData();unsubscribeData=null}currentUser=user;document.body.classList.toggle("auth-required",!user);document.body.classList.toggle("authenticated",!!user);if(!user){dataReady=false;$("#authGate").style.display="grid";return}$("#authGate").style.display="none";$("#accountEmail").textContent=user.email||"Cuenta";try{await loadUserData(user)}catch(error){console.error(error);alert("No se pudieron cargar tus datos de Firebase. Comprueba las reglas de Firestore y la conexión.")}});
+const save=()=>{if(currentUser)localStorage.setItem(`studyai-data-${currentUser.uid}`,JSON.stringify(db));else localStorage.setItem("studyai-data",JSON.stringify(db));render();if(currentUser&&dataReady){clearTimeout(saveTimer);saveTimer=setTimeout(async()=>{try{await setDoc(userDataRef(currentUser),{data:db,updatedAt:serverTimestamp()})}catch(error){console.error("Error guardando en Firestore",error);alert("No se han podido sincronizar los cambios. Comprueba tu conexión.")}},450)}};
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const dateFmt=d=>d?new Date(d+"T12:00:00").toLocaleDateString("es-ES",{day:"numeric",month:"short"}):"Sin fecha";
 const subjectName=id=>db.subjects.find(s=>s.id===id)?.name||"Sin asignatura";

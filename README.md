@@ -26,3 +26,28 @@ Esta primera versión guarda los datos en el navegador del dispositivo (localSto
 - Reglas de seguridad de Firestore para que cada usuario solo lea y escriba sus datos.
 - Backend seguro (por ejemplo, Cloud Functions) para conectar el modelo de IA sin exponer secretos.
 - IA con herramientas para crear, modificar y reprogramar tareas a partir del horario, los exámenes y los temarios.
+
+
+## Firebase (versión 2)
+
+Esta versión usa Firebase Authentication (correo y contraseña) y Cloud Firestore. Cada cuenta guarda sus datos en `users/{uid}/appData/main`; las reglas de Firestore deben permitir el acceso solo cuando `request.auth.uid == userId`.
+
+En Firebase Console, activa Authentication → Proveedores de acceso → Correo electrónico/contraseña. En Firestore publica reglas equivalentes a:
+
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId}/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
+```
+
+La primera cuenta que inicie sesión en un navegador puede importar los datos antiguos guardados en `studyai-data` de ese navegador si todavía no hay datos remotos para esa cuenta. Después, Firestore será la fuente compartida entre dispositivos.
+
+La configuración web de Firebase incluida en `app.js` identifica el proyecto; la seguridad depende de Authentication y de las reglas de Firestore. No añadas claves privadas de servicios de IA al JavaScript público.
+
+
+Si Firebase muestra `auth/unauthorized-domain`, abre Authentication → Settings → Authorized domains y añade el dominio de GitHub Pages de tu sitio (solo el host, por ejemplo `tuusuario.github.io`, sin `https://` ni rutas).
