@@ -52,6 +52,8 @@
       <button class="btn primary" id="authSubmit" type="submit" style="width:100%">Iniciar sesión</button>
       <div class="autherror" id="authError" role="alert"></div>
     </form>
+    <div style="display:flex;align-items:center;gap:10px;margin:14px 0;color:var(--muted)"><span style="height:1px;background:var(--line);flex:1"></span>o continúa con<span style="height:1px;background:var(--line);flex:1"></span></div>
+    <button class="btn" id="googleSignIn" type="button" style="width:100%">Continuar con Google</button>
   </div>
 </div>
 <div class="app">
@@ -86,8 +88,8 @@
     </section>
 
     <section class="page" id="page-schedule">
-      <div class="notice">Configura cuándo tienes clase y cuándo puedes estudiar. La planificación automática utilizará estos bloques para no asignarte sesiones imposibles.</div>
-      <div class="card"><div class="sectionhead"><h2>Disponibilidad semanal</h2><button class="btn primary" id="addSlot">＋ Añadir bloque</button></div><div class="schedule" id="scheduleGrid"></div></div>
+      <div class="notice">Añade cada actividad fija (colegio, comidas, deporte...) y los intervalos disponibles para estudiar. El planificador solo colocará sesiones dentro de los bloques disponibles y respetará tus actividades fijas. Ejemplo: disponibilidad de 13:30 a 19:30.</div>
+      <div class="card"><div class="sectionhead"><h2>Horario semanal detallado</h2><button class="btn primary" id="addSlot">＋ Añadir bloque</button></div><div class="schedule" id="scheduleGrid"></div></div>
       <div class="card" style="margin-top:16px"><div class="sectionhead"><h2>Preferencias de estudio</h2></div><div class="grid cards3"><div class="field"><label>Hora habitual de inicio</label><input type="time" id="prefStart" value="17:00"></div><div class="field"><label>Hora límite para terminar</label><input type="time" id="prefEnd" value="20:30"></div><div class="field"><label>Duración preferida de sesión</label><select id="prefDuration"><option value="25">25 minutos</option><option value="45" selected>45 minutos</option><option value="60">60 minutos</option><option value="90">90 minutos</option></select></div></div><button class="btn primary" id="savePrefs">Guardar preferencias</button></div>
     </section>
 
